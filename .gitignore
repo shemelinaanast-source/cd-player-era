@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# build output (generated from index.html + css/ + js/ by build.rb)
+dist/
+
+# logs / temp
+*.log

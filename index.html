@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CD Player Era</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DotGothic16&family=Gochi+Hand&family=Instrument+Serif&family=Press+Start+2P&family=VT323&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- decorative pink halftone stars -->
+  <div class="deco swirl"></div>
+  <div class="deco star d1"></div>
+  <div class="deco star d2"></div>
+  <div class="deco star d3"></div>
+
+  <div class="hint">♫ press play, it really sings ♫</div>
+
+  <div class="stage">
+
+    <!-- the hero disc — shows the cover of the currently selected shelf disc -->
+    <div class="frame">
+      <div class="disc" id="disc">
+        <img class="disc-cover" id="discCover" alt="" draggable="false">
+      </div>
+    </div>
+
+    <!-- LED marquee showing the track name -->
+    <div class="marquee">
+      <div class="screen">
+        <span class="ticker"><span class="track-name" id="marquee">INSERT A DISC ✦ PRESS PLAY ✦ CD PLAYER ERA ✦</span></span>
+      </div>
+    </div>
+
+    <!-- transport row: playback controls + volume to their right -->
+    <div class="transport">
+    <div class="controls">
+      <button class="btn xs" id="shuffle" title="Shuffle" aria-label="Shuffle">
+        <svg viewBox="0 0 24 24"><path d="M17 3l4 4-4 4v-3h-2.2c-1 0-1.9.5-2.5 1.3L11 11 9.7 9.3C8.6 7.9 7 7 5.2 7H3V5h2.2c2.4 0 4.6 1.1 6 3l.9 1.2.9-1.2c1.4-1.9 3.6-3 6-3H17V3zM3 17h2.2c1.8 0 3.4-.9 4.5-2.3l.9-1.2 1.3 1.7c1.4 1.9 3.6 3 6 3H21v2h-2.2c-2.4 0-4.6-1.1-6-3l-.9-1.2-.9 1.2c-1.4 1.9-3.6 3-6 3H3v-2z"/></svg>
+      </button>
+      <button class="btn sm" id="prev" title="Previous" aria-label="Previous track">
+        <svg viewBox="0 0 24 24"><path d="M11 6v12L2.5 12zM21 6v12l-8.5-6z"/></svg>
+      </button>
+      <button class="btn play" id="play" title="Play / Pause" aria-label="Play or pause">
+        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="btn sm" id="next" title="Next" aria-label="Next track">
+        <svg viewBox="0 0 24 24"><path d="M3 6l8.5 6L3 18zM13 6l8.5 6L13 18z"/></svg>
+      </button>
+      <button class="btn xs" id="repeat" title="Repeat" aria-label="Repeat">
+        <svg viewBox="0 0 24 24"><path d="M12 5V2L7.5 6 12 10V7c3.3 0 6 2.7 6 6a6 6 0 0 1-6 6 6 6 0 0 1-5.7-4.1l-1.9.6A8 8 0 0 0 12 21a8 8 0 0 0 8-8c0-4.4-3.6-8-8-8z"/></svg>
+      </button>
+    </div>
+
+    <!-- volume -->
+    <div class="volume">
+      <button class="vol-icon" id="volIcon" title="Mute" aria-label="Mute">
+        <svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4z"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <input type="range" class="vol-slider" id="volume" min="0" max="100" value="56" aria-label="Volume">
+    </div>
+    </div>
+
+    <div class="era">Deep into<br>the CD<br>player<br>era</div>
+  </div>
+
+  <!-- playlist shelf (built by js) -->
+  <div class="shelf" id="shelf"></div>
+
+  <!-- global film-grain overlay -->
+  <div class="grain-top" aria-hidden="true"></div>
+
+  <!-- data first, then the player logic -->
+  <script src="js/tracks.js"></script>
+  <script src="js/player.js"></script>
+</body>
+</html>

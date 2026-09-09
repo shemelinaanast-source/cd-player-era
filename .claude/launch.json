@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "cd-player",
+      "runtimeExecutable": "ruby",
+      "runtimeArgs": ["server.rb", "5500"],
+      "port": 5500
+    }
+  ]
+}
