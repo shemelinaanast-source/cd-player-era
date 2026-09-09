@@ -18,28 +18,28 @@ const T = (n) => NOTE[n];
 const TRACKS = [
   {
     title:"PLAY !! ✦ MIXTAPE (CD PLAYER ERA)",
-    cover:"assets/covers/kitty.png",
+    cover:"assets/covers/kitty.png", pet:"cat",
     bpm:132, wave:"square",
     lead:["C5","E5","G5","C6","G5","E5","G5","C6","A5","F5","A5","C6","B5","G5","D5","G5"],
     bass:["C3","C3","G3","G3","A3","A3","F3","G3"]
   },
   {
     title:"TEDDY BEAR ✦ GIFT EDITION",
-    cover:"assets/covers/disik.png",
+    cover:"assets/covers/disik.png", pet:"bear",
     bpm:126, wave:"square",
     lead:["G4","G4","A4","C5","C5","A4","G4","E4","G4","A4","C5","D5","E5","D5","C5","A4"],
     bass:["G3","G3","C3","C3","D3","D3","E3","E3"]
   },
   {
     title:"APHEX TWIN ✦ GIRL / BOY EP",
-    cover:"assets/covers/green.png",
+    cover:"assets/covers/green.png", pet:"dog",
     bpm:118, wave:"triangle",
     lead:["E5","G5","A5","G5","E5","D5","E5","R","C5","D5","E5","D5","C5","A4","C5","R"],
     bass:["A3","A3","E3","E3","F3","F3","G3","G3"]
   },
   {
     title:"WE'LL NEVER BE THIS YOUNG AGAIN",
-    cover:"assets/covers/pink.png",
+    cover:"assets/covers/pink.png", pet:"bunny",
     bpm:88, wave:"triangle",
     lead:["E5","B4","C5","D5","C5","B4","A4","G4","A4","B4","C5","B4","A4","G4","E4","R"],
     bass:["E3","E3","C3","C3","G3","G3","A3","B3"]

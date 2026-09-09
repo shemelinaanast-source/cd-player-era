@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* ---------------- audio engine ---------------- */
-let ctx = null, master = null;
+let ctx = null, master = null, analyser = null;
 let current = 0, playing = false, shuffle = false, repeatOne = false;
 let step = 0, nextTime = 0, timer = null;
 
@@ -20,6 +20,11 @@ function ensureCtx(){
   master = ctx.createGain();
   master.gain.value = muted ? 0 : volume;
   master.connect(ctx.destination);
+  // tap for the LCD visualizer (does not affect output)
+  analyser = ctx.createAnalyser();
+  analyser.fftSize = 128;
+  analyser.smoothingTimeConstant = 0.82;
+  master.connect(analyser);
 }
 
 // schedule one note with a short attack/release envelope
@@ -167,3 +172,113 @@ paintSlider();
 
 buildShelf();
 refreshDisc();
+
+/* ---------------- LCD dancing-pet visualizer ----------------
+   A pixel-art animal (per track) bounces & waves its paws in time
+   with the music. Each animal is drawn with vector shapes onto a tiny
+   offscreen canvas, then re-sampled onto the dark-grey LCD dot grid. */
+(function(){
+  const viz = document.getElementById('viz');
+  if(!viz) return;
+  const g = viz.getContext('2d');
+  const CELL_CSS = 4;                   // pixel pitch in CSS px (smaller = more pixels)
+  const ON  = 'rgba(30,46,44,1)';       // lit dark-grey pixel
+  const OFF = 'rgba(34,52,50,0.08)';    // faint unlit pixel (LCD grid)
+  const TAU = Math.PI * 2;
+  const S = 40;                         // offscreen sprite resolution
+  const off = document.createElement('canvas'); off.width = S; off.height = S;
+  const o = off.getContext('2d');
+  let freq = null, phase = 0, last = 0;
+
+  function sizeCanvas(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const r = viz.getBoundingClientRect();
+    viz.width  = Math.max(1, Math.round(r.width  * dpr));
+    viz.height = Math.max(1, Math.round(r.height * dpr));
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+
+  function ell(x, y, rx, ry){ o.beginPath(); o.ellipse(x, y, rx, ry, 0, 0, TAU); o.fill(); }
+  function tri(ax, ay, bx, by, cx, cy){ o.beginPath(); o.moveTo(ax, ay); o.lineTo(bx, by); o.lineTo(cx, cy); o.closePath(); o.fill(); }
+
+  // draw one animal, `frame` (0/1) toggles paw/leg pose
+  function drawPet(type, frame){
+    o.clearRect(0, 0, S, S);
+    o.fillStyle = '#000';
+    const up = frame === 1;
+    // ears (behind the head)
+    if(type === 'cat'){ tri(13,1, 9.5,10, 18,10); tri(27,1, 22,10, 30.5,10); }
+    else if(type === 'bear'){ ell(12.5,8, 3.7,3.7); ell(27.5,8, 3.7,3.7); }
+    else if(type === 'dog'){ ell(10.5,16, 3,6.5); ell(29.5,16, 3,6.5); }
+    else if(type === 'bunny'){ ell(16,4.5, 2.4,7); ell(24,4.5, 2.4,7); }
+    // head + body
+    ell(20,15, 8,8);
+    ell(20,28, 7.6,8);
+    // arms (wave up on frame 1, down on frame 0)
+    if(up){ ell(12,12, 2.7,4.6); ell(28,12, 2.7,4.6); }
+    else  { ell(11,26, 2.7,5);   ell(29,26, 2.7,5); }
+    // legs (together when hopping)
+    const ls = up ? 2.6 : 4.6;
+    ell(20 - ls,36, 3,3); ell(20 + ls,36, 3,3);
+    // eyes + nose punched out as light pixels
+    o.globalCompositeOperation = 'destination-out';
+    ell(16.6,15, 1.4,1.7); ell(23.4,15, 1.4,1.7);
+    ell(20,18.6, 1.2,1);
+    o.globalCompositeOperation = 'source-over';
+  }
+
+  function draw(t){
+    requestAnimationFrame(draw);
+    const dt = last ? Math.min(0.05, (t - last) / 1000) : 0.016; last = t;
+    const dpr  = Math.min(window.devicePixelRatio || 1, 2);
+    const cell = CELL_CSS * dpr;
+    const W = viz.width, H = viz.height;
+    const cols = Math.max(1, Math.floor(W / cell));
+    const rows = Math.max(1, Math.floor(H / cell));
+    const ox = (W - cols * cell) / 2, oy = (H - rows * cell) / 2;
+
+    // music level (or a gentle idle sway)
+    let level;
+    if(analyser && playing){
+      if(!freq || freq.length !== analyser.frequencyBinCount) freq = new Uint8Array(analyser.frequencyBinCount);
+      analyser.getByteFrequencyData(freq);
+      let s = 0; for(let i = 0; i < freq.length; i++) s += freq[i];
+      level = Math.min(1, (s / freq.length) / 150 + 0.10);
+    } else {
+      level = 0.22;
+    }
+
+    // bounce + dance timing scale with the music
+    phase += dt * (5 + level * 12);
+    const bob = Math.sin(phase);
+    const frame = bob > 0 ? 1 : 0;
+    const type = (typeof TRACKS !== 'undefined' && TRACKS[current] && TRACKS[current].pet) || 'cat';
+
+    drawPet(type, frame);
+    const data = o.getImageData(0, 0, S, S).data;
+
+    const SH = rows * 0.94, SW = SH;           // square sprite region, ~full height
+    const bounce = bob * (1.0 + level * 3.2);
+    const originX = (cols - SW) / 2;
+    const originY = (rows - SH) / 2 - bounce;
+    const dot = cell * 0.62;
+
+    g.clearRect(0, 0, W, H);
+    for(let gy = 0; gy < rows; gy++){
+      for(let gx = 0; gx < cols; gx++){
+        const u = (gx - originX) / SW * S;
+        const v = (gy - originY) / SH * S;
+        let on = false;
+        if(u >= 0 && u < S && v >= 0 && v < S){
+          on = data[(((v | 0) * S) + (u | 0)) * 4 + 3] > 128;
+        }
+        const px = ox + gx * cell + cell / 2;
+        const py = oy + gy * cell + cell / 2;
+        g.fillStyle = on ? ON : OFF;
+        g.fillRect(px - dot / 2, py - dot / 2, dot, dot);
+      }
+    }
+  }
+  requestAnimationFrame(draw);
+})();
