@@ -7,15 +7,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DotGothic16&family=Gochi+Hand&family=Instrument+Serif&family=Press+Start+2P&family=VT323&display=swap">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body>
 
-  <!-- decorative pink halftone stars -->
-  <div class="deco swirl"></div>
-  <div class="deco star d1"></div>
-  <div class="deco star d2"></div>
-  <div class="deco star d3"></div>
+  <!-- grid of glossy glass spheres over the gradient (dome shading + specular glints) -->
+  <div class="glass" aria-hidden="true"></div>
+  <div class="glints" aria-hidden="true"></div>
+
+  <!-- background theme switcher (more themes coming later) -->
+  <div class="bg-switch" role="group" aria-label="Background theme">
+    <button class="bg-btn is-active" data-bg="sakura" title="Sakura" aria-label="Sakura background">
+      <span class="sw sw-sakura"></span>
+    </button>
+  </div>
 
   <div class="hint">♫ press play, it really sings ♫</div>
 
@@ -82,7 +87,7 @@
   <div class="grain-top" aria-hidden="true"></div>
 
   <!-- data first, then the player logic -->
-  <script src="js/tracks.js"></script>
-  <script src="js/player.js"></script>
+  <script src="js/tracks.js?v=10"></script>
+  <script src="js/player.js?v=10"></script>
 </body>
 </html>

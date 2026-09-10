@@ -44,7 +44,7 @@ loop do
         body = File.binread(file)
         type = MIME[File.extname(file).downcase] || 'application/octet-stream'
         sock.print "HTTP/1.1 200 OK\r\nContent-Type: #{type}\r\n" \
-                   "Content-Length: #{body.bytesize}\r\nCache-Control: no-cache\r\n\r\n"
+                   "Content-Length: #{body.bytesize}\r\nCache-Control: no-store\r\n\r\n"
         sock.write(body) unless method == 'HEAD'
       end
     rescue => e

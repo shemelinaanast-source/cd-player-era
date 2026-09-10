@@ -22,9 +22,9 @@ title = head[/<title>.*?<\/title>/m]
 # keep the Google Fonts <link>s, drop the local stylesheet link (we inline it)
 links = head.scan(/<link[^>]*>/).reject { |l| l.include?('css/style.css') }.join("\n  ")
 
-# inline local scripts into the body markup
-body = body.sub(%r{<script src="js/tracks\.js"></script>}, "<script>\n#{tracks}\n</script>")
-body = body.sub(%r{<script src="js/player\.js"></script>}, "<script>\n#{player}\n</script>")
+# inline local scripts into the body markup (tolerate a ?v= cache-busting query)
+body = body.sub(%r{<script src="js/tracks\.js(?:\?[^"]*)?"></script>}, "<script>\n#{tracks}\n</script>")
+body = body.sub(%r{<script src="js/player\.js(?:\?[^"]*)?"></script>}, "<script>\n#{player}\n</script>")
 
 # The Artifact host wraps content in <!doctype>/<html>/<head>/<body>, so emit
 # only the inner content: title + font links + inlined <style> + body markup.
