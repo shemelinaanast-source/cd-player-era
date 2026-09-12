@@ -7,18 +7,23 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DotGothic16&family=Gochi+Hand&family=Instrument+Serif&family=Press+Start+2P&family=VT323&display=swap">
-  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/style.css?v=15">
 </head>
 <body>
 
   <!-- grid of glossy glass spheres over the gradient (dome shading + specular glints) -->
   <div class="glass" aria-hidden="true"></div>
   <div class="glints" aria-hidden="true"></div>
+  <!-- drifting purple accent for the aurora theme -->
+  <div class="aurora-accent" aria-hidden="true"></div>
 
   <!-- background theme switcher (more themes coming later) -->
   <div class="bg-switch" role="group" aria-label="Background theme">
     <button class="bg-btn is-active" data-bg="sakura" title="Sakura" aria-label="Sakura background">
       <span class="sw sw-sakura"></span>
+    </button>
+    <button class="bg-btn" data-bg="aurora" title="Aurora" aria-label="Aurora background">
+      <span class="sw sw-aurora"></span>
     </button>
   </div>
 
@@ -75,10 +80,14 @@
   <!-- playlist shelf (built by js) -->
   <div class="shelf" id="shelf"></div>
 
-  <!-- small physical LCD visualizer that reacts to the music -->
+  <!-- techy LCD gadget -->
   <div class="lcd" aria-hidden="true">
     <div class="lcd-screen">
       <canvas id="viz"></canvas>
+    </div>
+    <div class="lcd-chin">
+      <span class="lcd-led"></span>
+      <span class="lcd-grille"></span>
       <span class="lcd-label">audio·viz</span>
     </div>
   </div>
@@ -87,7 +96,7 @@
   <div class="grain-top" aria-hidden="true"></div>
 
   <!-- data first, then the player logic -->
-  <script src="js/tracks.js?v=10"></script>
-  <script src="js/player.js?v=10"></script>
+  <script src="js/tracks.js?v=15"></script>
+  <script src="js/player.js?v=15"></script>
 </body>
 </html>
